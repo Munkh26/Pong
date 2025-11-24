@@ -20,7 +20,8 @@ public class PongGame extends JPanel implements MouseMotionListener {
     // step 1 add any other private variables you may need to play the game.
     private SlowDown slow;
     private Speedup speed;
-    private Wall wall;
+    private Paddle paddle;
+    private Wall userWall;
 
 
 
@@ -40,7 +41,8 @@ public class PongGame extends JPanel implements MouseMotionListener {
         //create any other objects necessary to play the game.
         slow = new SlowDown(270, 90, 65,40);
         speed = new Speedup(310, 310, 65, 40);
-        wall = new Wall(10, 465, 5, 630, Color.RED);
+        paddle = new Paddle(20, 240, 50, 9, Color.WHITE);
+        userWall = new Wall(0, 0, 480, 5, Color.WHITE);
 
     }
 
@@ -71,7 +73,8 @@ public class PongGame extends JPanel implements MouseMotionListener {
         //call the "draw" function of any visual component you'd like to show up on the screen.
         slow.draw(g);
         speed.draw(g);
-        wall.draw(g);
+        paddle.draw(g);
+        userWall.draw(g);
     }
 
     // precondition: all required visual components are intialized to non-null
@@ -80,14 +83,21 @@ public class PongGame extends JPanel implements MouseMotionListener {
     public void gameLogic() {
         //add commands here to make the game play propperly
         ball.moveBall();
-        if (wall.isTouching(ball)) {
-            ball.reverseY();
+        ball.bounceOffwalls(0, 460);
+
+        paddle.moveY(userMouseY);
+
+        if (paddle.isTouching(ball)) {
+            ball.reverseX();
         }
-        
+
         aiPaddle.moveY(ball.getY());
 
         if (aiPaddle.isTouching(ball)) {
            ball.reverseX();
+        }
+        if (slow.isTouching(ball)) {
+            ball.setChangeX(ball.getChangeX() / 1.05);
         }
  
         pointScored();
