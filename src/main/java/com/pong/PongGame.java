@@ -1,3 +1,7 @@
+// Class Author: Munkhsoyombo Munkhbat
+// Date: 11/24/2025
+// Description:
+
 package com.pong;
 
 import javax.swing.*;
@@ -14,6 +18,11 @@ public class PongGame extends JPanel implements MouseMotionListener {
     private int aiScore;
     private Ball ball;
     // step 1 add any other private variables you may need to play the game.
+    private SlowDown slow;
+    private Speedup speed;
+    private Wall wall;
+
+
 
     public PongGame() {
 
@@ -29,6 +38,9 @@ public class PongGame extends JPanel implements MouseMotionListener {
         ball = new Ball(200, 200, 10, 3, Color.RED, 10);
 
         //create any other objects necessary to play the game.
+        slow = new SlowDown(270, 90, 65,40);
+        speed = new Speedup(310, 310, 65, 40);
+        wall = new Wall(10, 465, 5, 630, Color.RED);
 
     }
 
@@ -57,7 +69,9 @@ public class PongGame extends JPanel implements MouseMotionListener {
         aiPaddle.draw(g);
         
         //call the "draw" function of any visual component you'd like to show up on the screen.
-
+        slow.draw(g);
+        speed.draw(g);
+        wall.draw(g);
     }
 
     // precondition: all required visual components are intialized to non-null
@@ -65,6 +79,10 @@ public class PongGame extends JPanel implements MouseMotionListener {
     // postcondition: one frame of the game is "played"
     public void gameLogic() {
         //add commands here to make the game play propperly
+        ball.moveBall();
+        if (wall.isTouching(ball)) {
+            ball.reverseY();
+        }
         
         aiPaddle.moveY(ball.getY());
 
