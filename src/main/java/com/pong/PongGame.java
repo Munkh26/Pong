@@ -21,9 +21,7 @@ public class PongGame extends JPanel implements MouseMotionListener {
     private SlowDown slow;
     private Speedup speed;
     private Paddle paddle;
-    private Wall userWall;
-
-
+    private Wall wall;
 
     public PongGame() {
 
@@ -39,11 +37,10 @@ public class PongGame extends JPanel implements MouseMotionListener {
         ball = new Ball(200, 200, 10, 3, Color.RED, 10);
 
         //create any other objects necessary to play the game.
-        slow = new SlowDown(270, 90, 65,40);
-        speed = new Speedup(310, 310, 65, 40);
-        paddle = new Paddle(20, 240, 50, 9, Color.WHITE);
-        userWall = new Wall(0, 0, 480, 5, Color.WHITE);
-
+        slow = new SlowDown(270, 80, 55,40);
+        speed = new Speedup(310, 360, 55, 40);
+        paddle = new Paddle(20, 240, 60, 9, Color.WHITE);
+        wall = new Wall(320, 230, 50, 5, Color.WHITE);
     }
 
     // precondition: None
@@ -74,7 +71,7 @@ public class PongGame extends JPanel implements MouseMotionListener {
         slow.draw(g);
         speed.draw(g);
         paddle.draw(g);
-        userWall.draw(g);
+        wall.draw(g);
     }
 
     // precondition: all required visual components are intialized to non-null
@@ -96,10 +93,15 @@ public class PongGame extends JPanel implements MouseMotionListener {
         if (aiPaddle.isTouching(ball)) {
            ball.reverseX();
         }
+
         if (slow.isTouching(ball)) {
-            ball.setChangeX(ball.getChangeX() / 1.05);
+            ball.setChangeX(ball.getChangeX() * 0.90);
         }
- 
+
+        if (speed.isTouching(ball)) {
+            ball.setChangeX(ball.getChangeX() * 1.10);
+        }
+        
         pointScored();
 
     }
@@ -111,7 +113,18 @@ public class PongGame extends JPanel implements MouseMotionListener {
     // pixels) and the ai scores
     // if the ball goes off the left edge (0)
     public void pointScored() {
-
+        if (ball.getX() < 0) {
+            aiScore += 1;
+            ball.setX(200);
+            ball.sety(200 + ((int) (Math.random() * 300) - 150));
+            ball.setChangeX(10);
+        }
+        if (ball.getX() > 640) {
+            aiScore += 1;
+            ball.setX(200);
+            ball.sety(200 + ((int) (Math.random() * 300) - 150));
+            ball.setChangeX(10);
+        }
     }
 
     // you do not need to edit the below methods, but please do not remove them as
