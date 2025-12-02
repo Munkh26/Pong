@@ -1,6 +1,6 @@
 // Class Author: Munkhsoyombo Munkhbat
 // Date: 11/24/2025
-// Description:
+// Description: Its a pong game where user plays against an AI paddle. It includes speed up and slow down power ups and walls that the ball can bounce off of.
 
 package com.pong;
 
@@ -19,7 +19,9 @@ public class PongGame extends JPanel implements MouseMotionListener {
     private Ball ball;
     // step 1 add any other private variables you may need to play the game.
     private SlowDown slow;
+    private SlowDown slow2;
     private Speedup speed;
+    private Speedup speed2;
     private Paddle paddle;
     private Wall wall;
 
@@ -37,10 +39,12 @@ public class PongGame extends JPanel implements MouseMotionListener {
         ball = new Ball(200, 200, 10, 3, Color.RED, 10);
 
         //create any other objects necessary to play the game.
-        slow = new SlowDown(270, 80, 55,40);
-        speed = new Speedup(310, 360, 55, 40);
+        slow = new SlowDown(270, 80, 60,25);
+        slow2 = new SlowDown(500, 300, 60,25);
+        speed = new Speedup(330, 360, 60, 25);
+        speed2 = new Speedup(100, 150, 60, 25);
         paddle = new Paddle(20, 240, 60, 9, Color.WHITE);
-        wall = new Wall(320, 230, 50, 5, Color.WHITE);
+        wall = new Wall(320, 240, 70, 10, Color.WHITE);
     }
 
     // precondition: None
@@ -69,7 +73,9 @@ public class PongGame extends JPanel implements MouseMotionListener {
         
         //call the "draw" function of any visual component you'd like to show up on the screen.
         slow.draw(g);
+        slow2.draw(g);
         speed.draw(g);
+        speed2.draw(g);
         paddle.draw(g);
         wall.draw(g);
     }
@@ -85,6 +91,7 @@ public class PongGame extends JPanel implements MouseMotionListener {
         paddle.moveY(userMouseY);
 
         if (paddle.isTouching(ball)) {
+            ball.setX(ball.getX() + 3);
             ball.reverseX();
         }
 
@@ -94,12 +101,15 @@ public class PongGame extends JPanel implements MouseMotionListener {
            ball.reverseX();
         }
 
-        if (slow.isTouching(ball)) {
-            ball.setChangeX(ball.getChangeX() * 0.90);
+        if (slow.isTouching(ball) || slow2.isTouching(ball)) {
+            ball.setChangeX(ball.getChangeX() * 0.85);
         }
 
-        if (speed.isTouching(ball)) {
-            ball.setChangeX(ball.getChangeX() * 1.10);
+        if (speed.isTouching(ball) || speed2.isTouching(ball)) {
+            ball.setChangeX(ball.getChangeX() * 1.20);
+        }
+        if (wall.isTouching(ball)) {
+            ball.reverseX();
         }
         
         pointScored();
@@ -120,7 +130,7 @@ public class PongGame extends JPanel implements MouseMotionListener {
             ball.setChangeX(10);
         }
         if (ball.getX() > 640) {
-            aiScore += 1;
+            playerScore += 1;
             ball.setX(200);
             ball.sety(200 + ((int) (Math.random() * 300) - 150));
             ball.setChangeX(10);
