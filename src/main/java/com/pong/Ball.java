@@ -57,12 +57,6 @@ public Ball(int x, int y, int changeX, int changeY, Color color, int size) {
       if(y<bottom) {
         reverseY();  
       }
-      
-      
-
-
-
-
    }
  //precondition: None
  //postcondition: returns the ball's y value
